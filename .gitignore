@@ -1,0 +1,8 @@
+# Created by .ignore support plugin (hsz.mobi)
+.idea
+photoalbum-webapp/photoalbum-webapp.iml
+photoalbum.iml
+photoalbum-couchdb-adapter/photoalbum-couchdb-adapter.iml
+photoalbum-management/photoalbum-management.iml
+photoalbum-common/photoalbum-common.iml
+photoalbum-fileio-adapter/photoalbum-fileio-adapter.iml

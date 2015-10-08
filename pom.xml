@@ -6,15 +6,15 @@
 
     <groupId>com.mgu.photoalbum</groupId>
     <artifactId>photoalbum</artifactId>
-    <version>0.4.0</version>
+    <version>0.1.0</version>
     <packaging>pom</packaging>
 
-    <name>[cream] Photoalbum Service Parent</name>
+    <name>[photoalbum] Parent</name>
 
     <properties>
         <!-- build properties -->
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <cream.version>0.4.0</cream.version>
+        <photoalbum.version>0.1.0</photoalbum.version>
         <!-- version properties -->
         <solr.version>5.2.1</solr.version>
         <dropwizard.version>0.8.1</dropwizard.version>
@@ -44,6 +44,11 @@
     </build>
 
     <modules>
+        <module>photoalbum-webapp</module>
+        <module>photoalbum-management</module>
+        <module>photoalbum-couchdb-adapter</module>
+        <module>photoalbum-common</module>
+        <module>photoalbum-fileio-adapter</module>
     </modules>
 
     <dependencyManagement>
@@ -139,6 +144,11 @@
                 <groupId>ch.qos.logback</groupId>
                 <artifactId>logback-core</artifactId>
                 <version>1.1.2</version>
+            </dependency>
+            <dependency>
+                <groupId>org.slf4j</groupId>
+                <artifactId>slf4j-api</artifactId>
+                <version>1.7.10</version>
             </dependency>
             <dependency>
                 <groupId>org.slf4j</groupId>
