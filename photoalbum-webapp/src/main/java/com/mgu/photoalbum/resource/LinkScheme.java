@@ -1,53 +1,65 @@
 package com.mgu.photoalbum.resource;
 
-import java.util.HashMap;
-import java.util.Map;
+import javax.ws.rs.core.UriBuilder;
+import java.net.URI;
 
 public class LinkScheme {
 
-    private static final String DEFAULT_SCHEME = "http";
+    private static final String GALLERY_URI_TEMPLATE = "/albums";
 
-    private final String scheme;
+    private static final String ALBUM_URI_TEMPLATE = "/albums/{albumId}";
 
-    private final String hostname;
+    private static final String PHOTO_URI_TEMPLATE = "/albums/{albumId}/{photoId}";
 
-    private boolean usePort = false;
+    private static final String THUMBNAIL_URI_TEMPLATE = "/albums/{albumId}/{photoId}/thumbnail";
 
-    private int port;
+    private static final String METADATA_URI_TEMPLATE = "/albums/{albumId}/{photoId}/metadata";
 
-    public LinkScheme(final String hostname) {
-        this(DEFAULT_SCHEME, hostname);
+    public URI toGallery() {
+        return UriBuilder
+                .fromUri(GALLERY_URI_TEMPLATE)
+                .build();
     }
 
-    public LinkScheme(final String scheme, final String hostname) {
-
-        if (hostname.contains(":")) {
-            final String[] hostTokens = hostname.split(":");
-            if (hostTokens.length > 2) {
-                throw new IllegalArgumentException("Hostname can contain only one port delimiter.");
-            }
-            this.usePort = true;
-            this.hostname = hostTokens[0];
-            this.port = Integer.valueOf(hostTokens[1]);
-        } else {
-            this.hostname = hostname;
-        }
-
-        this.scheme = scheme;
+    public URI toAlbum(final String albumId) {
+        return UriBuilder
+                .fromUri(ALBUM_URI_TEMPLATE)
+                .resolveTemplate("albumId", albumId)
+                .build();
     }
 
-    protected String useTemplate(final String[] template) {
-        final int index = this.usePort ? 1 : 0;
-        return template[index];
+    public URI toPhoto(final String albumId, final String photoId) {
+        return withAlbumAndPhoto(albumId, photoId, PHOTO_URI_TEMPLATE);
     }
 
-    protected Map<String, Object> staticPlaceholders() {
-        final Map<String, Object> staticPlaceholders = new HashMap<>();
-        if (this.usePort) {
-            staticPlaceholders.put("port", String.valueOf(this.port));
-        }
-        staticPlaceholders.put("scheme", this.scheme);
-        staticPlaceholders.put("host", this.hostname);
-        return staticPlaceholders;
+    public URI toThumbnail(final String albumId, final String photoId) {
+        return withAlbumAndPhoto(albumId, photoId, THUMBNAIL_URI_TEMPLATE);
+    }
+
+    public URI toMetadata(final String albumId, final String photoId) {
+        return withAlbumAndPhoto(albumId, photoId, METADATA_URI_TEMPLATE);
+    }
+
+    private URI withAlbumAndPhoto(final String albumId, final String photoId, final String template) {
+        return UriBuilder
+                .fromUri(template)
+                .resolveTemplate("albumId", albumId)
+                .resolveTemplate("photoId", photoId)
+                .build();
+    }
+
+    public URI toDownload(final String albumId, final String photoId) {
+        return UriBuilder
+                .fromUri(PHOTO_URI_TEMPLATE)
+                .resolveTemplate("albumId", albumId)
+                .resolveTemplate("photoId", photoId)
+                .queryParam("download", "true")
+                .build();
+
+    }
+
+    public static void main(String[] args) {
+        LinkScheme linkScheme = new LinkScheme();
+        System.out.println(linkScheme.toGallery().toString());
     }
 }

@@ -8,7 +8,5 @@ public interface PhotoCommandService {
 
     void deletePhoto(String photoId);
 
-    void replaceTags(String photoId, String tag);
-
-    void replaceTags(String photoId, List<String> tags);
+    void updateMetadata(String photoId, String description, List<String> tags);
 }

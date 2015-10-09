@@ -24,6 +24,16 @@
             <artifactId>photoalbum-user-management</artifactId>
             <version>${photoalbum.version}</version>
         </dependency>
+        <dependency>
+            <groupId>com.mgu.photoalbum</groupId>
+            <artifactId>photoalbum-common</artifactId>
+            <version>${photoalbum.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.mgu.photoalbum</groupId>
+            <artifactId>photoalbum-management</artifactId>
+            <version>${photoalbum.version}</version>
+        </dependency>
         <!-- Utilities -->
         <dependency>
             <groupId>commons-codec</groupId>

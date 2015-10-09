@@ -11,6 +11,7 @@ import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -35,6 +36,8 @@ public class Photo extends Document {
         private String pathToOriginal = StringUtils.EMPTY;
 
         private String pathToThumbnail = StringUtils.EMPTY;
+
+        private String description = StringUtils.EMPTY;
 
         private List<String> tags = new ArrayList<>();
 
@@ -65,6 +68,11 @@ public class Photo extends Document {
 
         public PhotoBuilder pathToThumbnail(final String pathToThumbnail) {
             this.pathToThumbnail = pathToThumbnail;
+            return this;
+        }
+
+        public PhotoBuilder description(final String description) {
+            this.description = description;
             return this;
         }
 
@@ -108,6 +116,9 @@ public class Photo extends Document {
     @JsonProperty("pathToThumbnail")
     private String pathToThumbnail;
 
+    @JsonProperty("description")
+    private String description;
+
     @JsonProperty("tags")
     private List<String> tags = new ArrayList<>();
 
@@ -125,6 +136,7 @@ public class Photo extends Document {
         this.originalFilename = builder.originalFilename;
         this.pathToOriginal = builder.pathToOriginal;
         this.pathToThumbnail = builder.pathToThumbnail;
+        this.description = builder.description;
         this.tags.addAll(builder.tags);
     }
 
@@ -156,8 +168,17 @@ public class Photo extends Document {
         return pathToThumbnail;
     }
 
+    public String getDescription() {
+        return this.description;
+    }
+
     public List<String> getTags() {
-        return tags;
+        return Collections.unmodifiableList(tags);
+    }
+
+    public void describe(final String description) {
+        this.description = description;
+        this.lastModified = DateTime.now(DateTimeZone.UTC);
     }
 
     public void tag(final String tag) {

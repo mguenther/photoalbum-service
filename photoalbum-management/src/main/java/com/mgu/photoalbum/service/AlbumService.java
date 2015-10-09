@@ -5,6 +5,7 @@ import com.mgu.photoalbum.domain.Album;
 import com.mgu.photoalbum.identity.IdGenerator;
 import com.mgu.photoalbum.storage.AlbumRepository;
 
+import java.util.List;
 import java.util.function.Supplier;
 
 public class AlbumService implements AlbumCommandService, AlbumQueryService {
@@ -54,11 +55,16 @@ public class AlbumService implements AlbumCommandService, AlbumQueryService {
     }
 
     @Override
-    public Album byId(final String id) {
+    public Album albumById(final String id) {
         if (!repository.contains(id)) {
             throw new AlbumDoesNotExistException(id);
         }
         final Album album = repository.get(id);
         return album;
+    }
+
+    @Override
+    public List<Album> albumsByOwner(String ownerId) {
+        return null;
     }
 }
