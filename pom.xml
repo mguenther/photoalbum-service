@@ -49,6 +49,8 @@
         <module>photoalbum-couchdb-adapter</module>
         <module>photoalbum-common</module>
         <module>photoalbum-fileio-adapter</module>
+        <module>photoalbum-security</module>
+        <module>photoalbum-user-management</module>
     </modules>
 
     <dependencyManagement>

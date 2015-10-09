@@ -4,7 +4,10 @@ import com.hubspot.dropwizard.guice.GuiceBundle;
 import com.mgu.photoalbum.config.DatabaseModule;
 import com.mgu.photoalbum.config.ServiceConfig;
 import com.mgu.photoalbum.config.ServiceModule;
+import com.mgu.photoalbum.security.Principal;
 import io.dropwizard.Application;
+import io.dropwizard.auth.AuthFactory;
+import io.dropwizard.auth.basic.BasicAuthFactory;
 import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
 
@@ -30,6 +33,10 @@ public class PhotoalbumApplication extends Application<ServiceConfig> {
     public void run(final ServiceConfig serviceConfig, final Environment environment) throws Exception {
         // we let Guice manage everything with regard to web resources etc.
         // no configuration required
+        final BasicAuthenticator authenticator = guiceBundle.getInjector().getInstance(BasicAuthenticator.class);
+        environment
+                .jersey()
+                .register(AuthFactory.binder(new BasicAuthFactory<>(authenticator, "Photoalbum Realm", Principal.class)));
     }
 
     @Override

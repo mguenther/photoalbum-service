@@ -166,6 +166,11 @@
             <artifactId>photoalbum-management</artifactId>
             <version>${photoalbum.version}</version>
         </dependency>
+        <dependency>
+            <groupId>com.mgu.photoalbum</groupId>
+            <artifactId>photoalbum-security</artifactId>
+            <version>${photoalbum.version}</version>
+        </dependency>
         <!-- Dropwizard -->
         <dependency>
             <groupId>io.dropwizard</groupId>

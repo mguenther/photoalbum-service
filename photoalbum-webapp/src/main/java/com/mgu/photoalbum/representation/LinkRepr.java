@@ -1,4 +1,4 @@
-package com.mgu.photoalbum.base.representation;
+package com.mgu.photoalbum.representation;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;

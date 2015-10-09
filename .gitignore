@@ -6,3 +6,5 @@ photoalbum-couchdb-adapter/photoalbum-couchdb-adapter.iml
 photoalbum-management/photoalbum-management.iml
 photoalbum-common/photoalbum-common.iml
 photoalbum-fileio-adapter/photoalbum-fileio-adapter.iml
+photoalbum-security/photoalbum-security.iml
+photoalbum-user-management/photoalbum-user-management.iml
