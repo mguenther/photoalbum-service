@@ -51,6 +51,7 @@
         <module>photoalbum-fileio-adapter</module>
         <module>photoalbum-security</module>
         <module>photoalbum-user-management</module>
+        <module>photoalbum-bootstrap</module>
     </modules>
 
     <dependencyManagement>

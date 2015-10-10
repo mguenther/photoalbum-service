@@ -33,10 +33,6 @@ public class Photo extends Document {
 
         private String originalFilename = StringUtils.EMPTY;
 
-        private String pathToOriginal = StringUtils.EMPTY;
-
-        private String pathToThumbnail = StringUtils.EMPTY;
-
         private String description = StringUtils.EMPTY;
 
         private List<String> tags = new ArrayList<>();
@@ -58,16 +54,6 @@ public class Photo extends Document {
 
         public PhotoBuilder originalFilename(final String originalFilename) {
             this.originalFilename = originalFilename;
-            return this;
-        }
-
-        public PhotoBuilder pathToOriginal(final String pathToOriginal) {
-            this.pathToOriginal = pathToOriginal;
-            return this;
-        }
-
-        public PhotoBuilder pathToThumbnail(final String pathToThumbnail) {
-            this.pathToThumbnail = pathToThumbnail;
             return this;
         }
 
@@ -110,12 +96,6 @@ public class Photo extends Document {
     @JsonProperty("originalFilename")
     private String originalFilename;
 
-    @JsonProperty("pathToOriginal")
-    private String pathToOriginal;
-
-    @JsonProperty("pathToThumbnail")
-    private String pathToThumbnail;
-
     @JsonProperty("description")
     private String description;
 
@@ -134,8 +114,6 @@ public class Photo extends Document {
         this.created = builder.created;
         this.lastModified = builder.lastModified;
         this.originalFilename = builder.originalFilename;
-        this.pathToOriginal = builder.pathToOriginal;
-        this.pathToThumbnail = builder.pathToThumbnail;
         this.description = builder.description;
         this.tags.addAll(builder.tags);
     }
@@ -158,14 +136,6 @@ public class Photo extends Document {
 
     public String getOriginalFilename() {
         return originalFilename;
-    }
-
-    public String getPathToOriginal() {
-        return pathToOriginal;
-    }
-
-    public String getPathToThumbnail() {
-        return pathToThumbnail;
     }
 
     public String getDescription() {

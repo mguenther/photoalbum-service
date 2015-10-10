@@ -72,8 +72,6 @@ public class PhotoService implements PhotoCommandService, PhotoQueryService {
                 .createdBy(ownerId)
                 .id(photoId)
                 .originalFilename(originalFilename)
-                .pathToOriginal(originalPath.toString())
-                .pathToThumbnail(thumbnailPath.toString())
                 .build();
         repository.add(photo);
 
