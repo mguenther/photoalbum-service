@@ -1,4 +1,4 @@
-package com.mgu.photoalbum.resource;
+package com.mgu.photoalbum.webapp.resource;
 
 import com.google.inject.Singleton;
 

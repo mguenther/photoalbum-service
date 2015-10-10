@@ -7,12 +7,14 @@ import com.mgu.photoalbum.domain.Photo;
 import com.mgu.photoalbum.identity.IdGenerator;
 import com.mgu.photoalbum.service.scaler.ImageScaler;
 import com.mgu.photoalbum.storage.PhotoRepository;
+import org.apache.commons.lang3.StringUtils;
 import org.ektorp.UpdateConflictException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.awt.Dimension;
+import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.io.File;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.function.Supplier;
@@ -51,7 +53,7 @@ public class PhotoService implements PhotoCommandService, PhotoQueryService {
         this.inputStreamAdapter = inputStreamAdapter;
         this.pathScheme = pathScheme;
         this.scaler = scaler;
-        this.photoIdGenerator = () -> idGenerator.generateId("PH", 14);
+        this.photoIdGenerator = () -> idGenerator.generateId(14);
     }
 
     @Override
@@ -71,6 +73,10 @@ public class PhotoService implements PhotoCommandService, PhotoQueryService {
         pathAdapter.copy(inputStreamAdapter.getBase64DecodingInputStream(base64EncodedImage), originalPath);
         pathAdapter.copyImage(generateThumbnail(originalPath), thumbnailPath);
 
+        if (LOGGER.isDebugEnabled()) {
+            LOGGER.debug("Generated thumbnail for photo with ID " + photoId + " at " + thumbnailPath.toString());
+        }
+
         final Photo photo = Photo
                 .create()
                 .belongsTo(albumId)
@@ -79,6 +85,8 @@ public class PhotoService implements PhotoCommandService, PhotoQueryService {
                 .originalFilename(originalFilename)
                 .build();
         repository.add(photo);
+
+        LOGGER.info("Successfully uploaded photo with ID " + photoId + " to repository.");
 
         return photoId;
     }
@@ -102,10 +110,23 @@ public class PhotoService implements PhotoCommandService, PhotoQueryService {
             throw new PhotoDoesNotExistException(photoId);
         }
         final Photo photo = repository.get(photoId);
-        final Path photoFolder = pathScheme.constructPathToPhotoFolder(photo.getOwnerId(), photo.getAlbumId(), photoId);
-        pathAdapter.deleteDirectory(photoFolder);
+        deletePhotoFiles(photo.getOwnerId(), photo.getAlbumId(), photoId);
         repository.remove(photo);
+
+        LOGGER.info("Removed photo with ID " + photoId + " from photo album with ID " + photo.getAlbumId() + ".");
+        // TODO (mgu): Should not be necessary and we need to get rid of that dependency!
         albumCommandService.removePhotoFromAlbum(photo.getAlbumId(), photoId);
+    }
+
+    private void deletePhotoFiles(final String ownerId, final String albumId, final String photoId) {
+        final File original = pathScheme.constructPathToOriginal(ownerId, albumId, photoId).toFile();
+        final File thumbnail = pathScheme.constructPathToThumbnail(ownerId, albumId, photoId).toFile();
+        if (pathAdapter.delete(original)) {
+            LOGGER.info("Deleted original photo at " + original.toString());
+        }
+        if (pathAdapter.delete(thumbnail)) {
+            LOGGER.info("Deleted thumbnail photo at " + thumbnail.toString());
+        }
     }
 
     @Override
@@ -119,6 +140,10 @@ public class PhotoService implements PhotoCommandService, PhotoQueryService {
         photo.tag(tags);
         try {
             repository.update(photo);
+            if (LOGGER.isInfoEnabled()) {
+                LOGGER.info("Updated metadata for photo with ID " + photoId + " to: description='" + description + "', " +
+                            "tags='" + StringUtils.join(tags, ",") + "'.");
+            }
         } catch (UpdateConflictException e) {
             throw new UnableToUpdateMetadataException(photoId, description, tags);
         }

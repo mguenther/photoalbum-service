@@ -1,4 +1,4 @@
-package com.mgu.photoalbum.converter;
+package com.mgu.photoalbum.webapp.converter;
 
 public interface Converter<I, O> {
 

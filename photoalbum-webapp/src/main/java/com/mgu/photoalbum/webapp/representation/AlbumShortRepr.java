@@ -1,11 +1,10 @@
-package com.mgu.photoalbum.representation;
+package com.mgu.photoalbum.webapp.representation;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 public class AlbumShortRepr {

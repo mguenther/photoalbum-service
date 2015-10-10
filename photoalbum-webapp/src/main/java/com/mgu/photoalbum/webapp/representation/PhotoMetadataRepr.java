@@ -1,4 +1,4 @@
-package com.mgu.photoalbum.representation;
+package com.mgu.photoalbum.webapp.representation;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.apache.commons.lang3.StringUtils;

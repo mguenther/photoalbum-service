@@ -12,6 +12,6 @@ public class UnableToUpdateAlbumException extends PhotoalbumException {
 
     @Override
     public String getErrorCode() {
-        return "P005";
+        return "A002";
     }
 }

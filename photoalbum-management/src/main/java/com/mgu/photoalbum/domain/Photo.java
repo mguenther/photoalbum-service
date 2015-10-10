@@ -173,11 +173,11 @@ public class Photo extends Document {
         this.lastModified = DateTime.now(DateTimeZone.UTC);
     }
 
-    public static PhotoBuilder create() {
-        return new PhotoBuilder();
-    }
-
     public boolean anyTagMatches(final List<String> tags) {
         return tags.isEmpty() || getTags().stream().anyMatch(tag -> tags.contains(tag));
+    }
+
+    public static PhotoBuilder create() {
+        return new PhotoBuilder();
     }
 }

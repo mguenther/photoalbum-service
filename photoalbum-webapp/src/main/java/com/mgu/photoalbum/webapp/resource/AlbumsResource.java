@@ -1,11 +1,11 @@
-package com.mgu.photoalbum.resource;
+package com.mgu.photoalbum.webapp.resource;
 
 import com.codahale.metrics.annotation.Timed;
 import com.google.inject.Inject;
-import com.mgu.photoalbum.converter.AlbumShortReprConverter;
-import com.mgu.photoalbum.converter.GalleryReprConverter;
-import com.mgu.photoalbum.representation.CreateAlbumRepr;
-import com.mgu.photoalbum.representation.GalleryRepr;
+import com.mgu.photoalbum.webapp.converter.AlbumShortReprConverter;
+import com.mgu.photoalbum.webapp.converter.GalleryReprConverter;
+import com.mgu.photoalbum.webapp.representation.CreateAlbumRepr;
+import com.mgu.photoalbum.webapp.representation.GalleryRepr;
 import com.mgu.photoalbum.security.Authorization;
 import com.mgu.photoalbum.security.Principal;
 import com.mgu.photoalbum.service.AlbumCommandService;

@@ -5,6 +5,8 @@ import com.mgu.photoalbum.domain.Album;
 import com.mgu.photoalbum.identity.IdGenerator;
 import com.mgu.photoalbum.storage.AlbumRepository;
 import org.ektorp.UpdateConflictException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -13,13 +15,21 @@ import java.util.function.Supplier;
 
 public class AlbumService implements AlbumCommandService, AlbumQueryService {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(AlbumService.class);
+
     private final AlbumRepository repository;
+
+    private PhotoCommandService photoCommandService;
 
     private final Supplier<String> albumIdGenerator;
 
     @Inject
-    public AlbumService(final AlbumRepository repository, final IdGenerator idGenerator) {
+    public AlbumService(
+            final AlbumRepository repository,
+            final PhotoCommandService photoCommandService,
+            final IdGenerator idGenerator) {
         this.repository = repository;
+        this.photoCommandService = photoCommandService;
         this.albumIdGenerator = () -> idGenerator.generateId("AL", 14);
     }
 
@@ -45,16 +55,17 @@ public class AlbumService implements AlbumCommandService, AlbumQueryService {
     }
 
     @Override
-    public void deleteAlbum(final String id) {
-        if (!repository.contains(id)) {
+    public void deleteAlbum(final String albumId) {
+        if (!repository.contains(albumId)) {
             // deleting an existing album and trying to delete a non-existing album leads to the
             // same state convergence. thus, we do not treat a deletion request to a non-existing album
             // not as an error, but return immediately
             return;
         }
-        final Album album = repository.get(id);
-        // TODO: remove photos and files as well!
+        final Album album = repository.get(albumId);
+        album.getContainingPhotos().forEach(photoId -> photoCommandService.deletePhoto(photoId));
         repository.remove(album);
+        LOGGER.info("Removed album with ID " + albumId + " along with all associated photos.");
     }
 
     @Override

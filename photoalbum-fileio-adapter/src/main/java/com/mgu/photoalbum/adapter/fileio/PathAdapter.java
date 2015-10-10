@@ -7,6 +7,7 @@ import org.slf4j.LoggerFactory;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
@@ -83,6 +84,10 @@ public class PathAdapter {
 
     public boolean exists(final Path path) {
         return Files.exists(path);
+    }
+
+    public boolean delete(final File file) {
+        return FileUtils.deleteQuietly(file);
     }
 
     public void deleteDirectory(final Path path) {

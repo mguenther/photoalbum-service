@@ -1,10 +1,10 @@
-package com.mgu.photoalbum.converter;
+package com.mgu.photoalbum.webapp.converter;
 
 import com.google.inject.Inject;
 import com.mgu.photoalbum.domain.Photo;
-import com.mgu.photoalbum.representation.LinkRepr;
-import com.mgu.photoalbum.representation.PhotoShortRepr;
-import com.mgu.photoalbum.resource.LinkScheme;
+import com.mgu.photoalbum.webapp.representation.LinkRepr;
+import com.mgu.photoalbum.webapp.representation.PhotoShortRepr;
+import com.mgu.photoalbum.webapp.resource.LinkScheme;
 
 import javax.ws.rs.HttpMethod;
 

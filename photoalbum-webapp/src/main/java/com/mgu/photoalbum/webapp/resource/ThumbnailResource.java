@@ -1,4 +1,4 @@
-package com.mgu.photoalbum.resource;
+package com.mgu.photoalbum.webapp.resource;
 
 import com.codahale.metrics.annotation.Timed;
 import com.google.inject.Inject;

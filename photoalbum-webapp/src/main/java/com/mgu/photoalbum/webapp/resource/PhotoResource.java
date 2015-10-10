@@ -1,11 +1,11 @@
-package com.mgu.photoalbum.resource;
+package com.mgu.photoalbum.webapp.resource;
 
 import com.codahale.metrics.annotation.Timed;
 import com.google.common.base.Optional;
 import com.google.inject.Inject;
-import com.mgu.photoalbum.converter.PhotoMetadataReprConverter;
+import com.mgu.photoalbum.webapp.converter.PhotoMetadataReprConverter;
 import com.mgu.photoalbum.domain.Photo;
-import com.mgu.photoalbum.representation.UpdateMetadataRepr;
+import com.mgu.photoalbum.webapp.representation.UpdateMetadataRepr;
 import com.mgu.photoalbum.security.Authorization;
 import com.mgu.photoalbum.security.Principal;
 import com.mgu.photoalbum.security.UserIsNotAuthorizedException;
