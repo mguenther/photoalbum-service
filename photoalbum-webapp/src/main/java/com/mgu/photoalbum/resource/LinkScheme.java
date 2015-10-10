@@ -16,8 +16,6 @@ public class LinkScheme {
 
     private static final String THUMBNAIL_URI_TEMPLATE = "/albums/{albumId}/{photoId}/thumbnail";
 
-    private static final String METADATA_URI_TEMPLATE = "/albums/{albumId}/{photoId}/metadata";
-
     public URI toGallery() {
         return UriBuilder
                 .fromUri(GALLERY_URI_TEMPLATE)
@@ -37,10 +35,6 @@ public class LinkScheme {
 
     public URI toThumbnail(final String albumId, final String photoId) {
         return withAlbumAndPhoto(albumId, photoId, THUMBNAIL_URI_TEMPLATE);
-    }
-
-    public URI toMetadata(final String albumId, final String photoId) {
-        return withAlbumAndPhoto(albumId, photoId, METADATA_URI_TEMPLATE);
     }
 
     private URI withAlbumAndPhoto(final String albumId, final String photoId, final String template) {

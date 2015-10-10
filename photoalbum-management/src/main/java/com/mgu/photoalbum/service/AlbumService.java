@@ -4,7 +4,10 @@ import com.google.inject.Inject;
 import com.mgu.photoalbum.domain.Album;
 import com.mgu.photoalbum.identity.IdGenerator;
 import com.mgu.photoalbum.storage.AlbumRepository;
+import org.ektorp.UpdateConflictException;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.function.Supplier;
 
@@ -55,6 +58,20 @@ public class AlbumService implements AlbumCommandService, AlbumQueryService {
     }
 
     @Override
+    public void removePhotoFromAlbum(String albumId, String photoId) {
+        if (!repository.contains(albumId)) {
+            return;
+        }
+        final Album album = repository.get(albumId);
+        album.dissociatePhoto(photoId);
+        try {
+            repository.update(album);
+        } catch (UpdateConflictException e) {
+            throw new UnableToUpdateAlbumException(albumId, e);
+        }
+    }
+
+    @Override
     public Album albumById(final String id) {
         if (!repository.contains(id)) {
             throw new AlbumDoesNotExistException(id);
@@ -64,7 +81,9 @@ public class AlbumService implements AlbumCommandService, AlbumQueryService {
     }
 
     @Override
-    public List<Album> albumsByOwner(String ownerId) {
-        return null;
+    public List<Album> albumsByOwner(final String ownerId) {
+        final List<Album> albumsByOwner = new ArrayList<>();
+        albumsByOwner.addAll(repository.getAllByOwner(ownerId));
+        return Collections.unmodifiableList(albumsByOwner);
     }
 }

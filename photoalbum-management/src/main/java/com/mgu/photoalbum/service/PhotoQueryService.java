@@ -6,13 +6,11 @@ import java.util.List;
 
 public interface PhotoQueryService {
 
-    byte[] originalById(String id); // byte[] originalById(PhotoId identity)
+    byte[] originalById(String id);
 
     byte[] thumbnailById(String id);
 
     Photo photoById(String id);
-
-    List<Photo> photosByAlbumAndTags(String albumId, List<String> tags);
 
     List<Photo> search(String albumId, List<String> tags, int offset, int pageSize);
 }

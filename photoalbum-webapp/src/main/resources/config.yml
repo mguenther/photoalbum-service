@@ -33,6 +33,7 @@ logging:
   # sets the log level for our webapp
   loggers:
     com.cream: ${log.level}
+    org.eclipse.jetty.servlets: DEBUG
   # define log appenders for various log channels (console, file)
   appenders:
     # log to console

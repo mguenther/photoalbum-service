@@ -22,6 +22,7 @@ public class AlbumShortReprConverter implements Converter<Album, AlbumShortRepr>
 
         return AlbumShortRepr
                 .create()
+                .id(album.getId())
                 .title(album.getTitle())
                 .numberOfPhotos(album.getContainingPhotos().size())
                 .link(

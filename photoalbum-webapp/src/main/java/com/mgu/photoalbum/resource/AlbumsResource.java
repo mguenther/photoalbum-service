@@ -49,11 +49,6 @@ public class AlbumsResource {
     public Response createAlbum(
             @NotNull CreateAlbumRepr createAlbumRepr,
             @Auth Principal principal) {
-
-        /*if (createAlbumRepr == null) {
-            return Response.status(422).build();
-        }*/
-
         final String albumId = commandService.createAlbum(principal.getUserId(), createAlbumRepr.getAlbumName());
         return Response.created(linkScheme.toAlbum(albumId)).build();
     }
@@ -66,5 +61,18 @@ public class AlbumsResource {
 
         final GalleryRepr galleryRepr = galleryConverter.convert(queryService.albumsByOwner(principal.getUserId()));
         return Response.ok(galleryRepr).build();
+    }
+
+    @OPTIONS
+    @Timed
+    public Response preflight() {
+        return Response
+                .ok()
+                .header("Access-Control-Allow-Origin", "*")
+                .header("Access-Control-Allow-Methods", "GET,POST")
+                .header("Access-Control-Allow-Headers", "Origin, Content-Type, Accept, Authorization")
+                .encoding("UTF-8")
+                .allow("GET", "POST")
+                .build();
     }
 }

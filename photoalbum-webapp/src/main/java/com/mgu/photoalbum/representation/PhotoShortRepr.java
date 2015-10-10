@@ -2,8 +2,11 @@ package com.mgu.photoalbum.representation;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 public class PhotoShortRepr {
 
@@ -11,7 +14,7 @@ public class PhotoShortRepr {
 
         private String description;
         private List<String> tags = new LinkedList<>();
-        private List<LinkRepr> links = new LinkedList<>();
+        private Map<String, LinkRepr> namedLinks = new HashMap<>();
 
         public PhotoShortReprBuilder description(final String description) {
             this.description = description;
@@ -24,7 +27,7 @@ public class PhotoShortRepr {
         }
 
         public PhotoShortReprBuilder link(final LinkRepr link) {
-            this.links.add(link);
+            this.namedLinks.put(link.getRelation(), link);
             return this;
         }
 
@@ -40,12 +43,12 @@ public class PhotoShortRepr {
     private final List<String> tags;
 
     @JsonProperty("links")
-    private final List<LinkRepr> links;
+    private final Map<String, LinkRepr> namedLinks;
 
     private PhotoShortRepr(final PhotoShortReprBuilder builder) {
         this.description = builder.description;
         this.tags = builder.tags;
-        this.links = builder.links;
+        this.namedLinks = builder.namedLinks;
     }
 
     public String getDescription() {
@@ -53,11 +56,11 @@ public class PhotoShortRepr {
     }
 
     public List<String> getTags() {
-        return tags;
+        return Collections.unmodifiableList(tags);
     }
 
-    public List<LinkRepr> getLinks() {
-        return links;
+    public Map<String, LinkRepr> getNamedLinks() {
+        return Collections.unmodifiableMap(namedLinks);
     }
 
     public static PhotoShortReprBuilder create() {

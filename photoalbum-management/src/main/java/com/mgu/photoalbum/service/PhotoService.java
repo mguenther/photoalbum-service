@@ -16,12 +16,15 @@ import java.awt.image.BufferedImage;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.function.Supplier;
+import java.util.stream.Collectors;
 
 public class PhotoService implements PhotoCommandService, PhotoQueryService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(PhotoService.class);
 
     private final PhotoRepository repository;
+
+    private final AlbumCommandService albumCommandService;
 
     private final PathScheme pathScheme;
 
@@ -35,6 +38,7 @@ public class PhotoService implements PhotoCommandService, PhotoQueryService {
 
     @Inject
     public PhotoService(
+            final AlbumCommandService albumCommandService,
             final PhotoRepository repository,
             final PathScheme pathScheme,
             final PathAdapter pathAdapter,
@@ -42,11 +46,12 @@ public class PhotoService implements PhotoCommandService, PhotoQueryService {
             final IdGenerator idGenerator,
             final ImageScaler scaler) {
         this.repository = repository;
+        this.albumCommandService = albumCommandService;
         this.pathAdapter = pathAdapter;
         this.inputStreamAdapter = inputStreamAdapter;
         this.pathScheme = pathScheme;
         this.scaler = scaler;
-        this.photoIdGenerator = () -> idGenerator.generateId("AL", 14);
+        this.photoIdGenerator = () -> idGenerator.generateId("PH", 14);
     }
 
     @Override
@@ -100,6 +105,7 @@ public class PhotoService implements PhotoCommandService, PhotoQueryService {
         final Path photoFolder = pathScheme.constructPathToPhotoFolder(photo.getOwnerId(), photo.getAlbumId(), photoId);
         pathAdapter.deleteDirectory(photoFolder);
         repository.remove(photo);
+        albumCommandService.removePhotoFromAlbum(photo.getAlbumId(), photoId);
     }
 
     @Override
@@ -114,7 +120,7 @@ public class PhotoService implements PhotoCommandService, PhotoQueryService {
         try {
             repository.update(photo);
         } catch (UpdateConflictException e) {
-            throw new UnableToUpdateMetadata(photoId, description, tags);
+            throw new UnableToUpdateMetadataException(photoId, description, tags);
         }
     }
 
@@ -161,12 +167,13 @@ public class PhotoService implements PhotoCommandService, PhotoQueryService {
     }
 
     @Override
-    public List<Photo> photosByAlbumAndTags(final String albumId, final List<String> tags) {
-        return null;
-    }
-
-    @Override
     public List<Photo> search(final String albumId, final List<String> tags, final int offset, final int pageSize) {
-        return null;
+        return repository
+                .getAllByAlbum(albumId)
+                .stream()
+                .filter(photo -> photo.anyTagMatches(tags))
+                .skip(offset)
+                .limit(pageSize)
+                .collect(Collectors.toList());
     }
 }

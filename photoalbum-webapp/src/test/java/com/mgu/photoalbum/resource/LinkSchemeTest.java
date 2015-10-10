@@ -30,11 +30,6 @@ public class LinkSchemeTest {
     }
 
     @Test
-    public void toMetadataShouldYieldUrlWithCorrectlySubstitutedPathParameters() {
-        assertThat(linkScheme.toMetadata("Aa3b", "Ph0t0").toString(), is("/albums/Aa3b/Ph0t0/metadata"));
-    }
-
-    @Test
     public void toDownloadShouldYieldUrlWithCorrectlySubstitutedPathAndQueryParameters() {
         assertThat(linkScheme.toDownload("Aa3b", "Ph0t0").toString(), is("/albums/Aa3b/Ph0t0?download=true"));
     }

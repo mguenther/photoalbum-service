@@ -1,6 +1,7 @@
 package com.mgu.photoalbum;
 
 import com.hubspot.dropwizard.guice.GuiceBundle;
+import com.mgu.photoalbum.config.CrossOriginConfig;
 import com.mgu.photoalbum.config.ServiceConfig;
 import com.mgu.photoalbum.config.ServiceModule;
 import com.mgu.photoalbum.security.Principal;
@@ -9,6 +10,11 @@ import io.dropwizard.auth.AuthFactory;
 import io.dropwizard.auth.basic.BasicAuthFactory;
 import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
+import org.eclipse.jetty.servlets.CrossOriginFilter;
+
+import javax.servlet.DispatcherType;
+import javax.servlet.FilterRegistration;
+import java.util.EnumSet;
 
 public class PhotoalbumApplication extends Application<ServiceConfig> {
 
@@ -35,6 +41,16 @@ public class PhotoalbumApplication extends Application<ServiceConfig> {
         environment
                 .jersey()
                 .register(AuthFactory.binder(new BasicAuthFactory<>(authenticator, "Photoalbum Realm", Principal.class)));
+
+        System.setProperty("sun.net.http.allowRestrictedHeaders", "true");
+
+        FilterRegistration.Dynamic filter = environment.servlets().addFilter("CORSFilter", CrossOriginFilter.class);
+
+        filter.addMappingForUrlPatterns(EnumSet.of(DispatcherType.REQUEST), false, environment.getApplicationContext().getContextPath() + "*");
+        filter.setInitParameter(CrossOriginFilter.ALLOWED_METHODS_PARAM, "GET,PUT,POST,DELETE,OPTIONS");
+        filter.setInitParameter(CrossOriginFilter.ALLOWED_ORIGINS_PARAM, "*");
+        filter.setInitParameter(CrossOriginFilter.ALLOWED_HEADERS_PARAM, "Origin, Content-Type, Accept, Authorization");
+        filter.setInitParameter(CrossOriginFilter.ALLOW_CREDENTIALS_PARAM, "true");
     }
 
     @Override

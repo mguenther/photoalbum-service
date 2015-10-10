@@ -30,6 +30,7 @@ public class PhotoShortReprConverter implements Converter<Photo, PhotoShortRepr>
                                 .href(linkScheme.toPhoto(photo.getAlbumId(), photo.getId()))
                                 .method(HttpMethod.GET)
                                 .relation("viewPhoto")
+                                .mediaType("image/jpeg")
                                 .build()
                 )
                 .link(
@@ -38,12 +39,13 @@ public class PhotoShortReprConverter implements Converter<Photo, PhotoShortRepr>
                                 .href(linkScheme.toThumbnail(photo.getAlbumId(), photo.getId()))
                                 .method(HttpMethod.GET)
                                 .relation("viewThumbnail")
+                                .mediaType("image/jpeg")
                                 .build()
                 )
                 .link(
                         LinkRepr
                                 .create()
-                                .href(linkScheme.toMetadata(photo.getAlbumId(), photo.getId()))
+                                .href(linkScheme.toPhoto(photo.getAlbumId(), photo.getId()))
                                 .method(HttpMethod.GET)
                                 .relation("viewMetadata")
                                 .build()
@@ -54,6 +56,7 @@ public class PhotoShortReprConverter implements Converter<Photo, PhotoShortRepr>
                                 .href(linkScheme.toDownload(photo.getAlbumId(), photo.getId()))
                                 .method(HttpMethod.GET)
                                 .relation("downloadPhoto")
+                                .mediaType("image/jpeg")
                                 .build()
                 )
                 .build();

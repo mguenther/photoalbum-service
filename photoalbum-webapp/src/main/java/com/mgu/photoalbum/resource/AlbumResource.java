@@ -11,6 +11,7 @@ import com.mgu.photoalbum.representation.UploadPhotoRepr;
 import com.mgu.photoalbum.security.Authorization;
 import com.mgu.photoalbum.security.Principal;
 import com.mgu.photoalbum.security.UserIsNotAuthorizedException;
+import com.mgu.photoalbum.service.AlbumCommandService;
 import com.mgu.photoalbum.service.AlbumQueryService;
 import com.mgu.photoalbum.service.PhotoCommandService;
 import com.mgu.photoalbum.service.PhotoQueryService;
@@ -40,6 +41,8 @@ public class AlbumResource {
 
     private final AlbumQueryService albumQueryService;
 
+    private final AlbumCommandService albumCommandService;
+
     private final PhotoCommandService photoCommandService;
 
     private final PhotoQueryService photoQueryService;
@@ -52,11 +55,13 @@ public class AlbumResource {
 
     @Inject
     public AlbumResource(
+            final AlbumCommandService albumCommandService,
             final AlbumQueryService albumQueryService,
             final PhotoQueryService photoQueryService,
             final PhotoCommandService photoCommandService,
             final Authorization authorization,
             final AlbumReprConverter albumConverter) {
+        this.albumCommandService = albumCommandService;
         this.albumQueryService = albumQueryService;
         this.photoQueryService = photoQueryService;
         this.photoCommandService = photoCommandService;
@@ -76,7 +81,7 @@ public class AlbumResource {
             @QueryParam("pageSize") Optional<Integer> optionalPageSize,
             @QueryParam("tags") Optional<String> optionalTags)  {
 
-        Album album = albumQueryService.albumById(albumId);
+        final Album album = albumQueryService.albumById(albumId);
 
         if (!authorization.isAuthorized(principal, album)) {
             throw new UserIsNotAuthorizedException(principal);
@@ -104,10 +109,17 @@ public class AlbumResource {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
+    @Timed
     public Response uploadPhoto(
             @Auth Principal principal,
             @PathParam("albumId") String albumId,
             UploadPhotoRepr uploadPhotoRepr) {
+
+        final Album album = albumQueryService.albumById(albumId);
+
+        if (!authorization.isAuthorized(principal, album)) {
+            throw new UserIsNotAuthorizedException(principal);
+        }
 
         final String photoId = photoCommandService.uploadPhoto(
                 principal.getUserId(),
@@ -116,5 +128,34 @@ public class AlbumResource {
                 uploadPhotoRepr.getBase64EncodedImage());
 
         return Response.created(linkScheme.toPhoto(albumId, photoId)).build();
+    }
+
+    @DELETE
+    @Timed
+    public Response deleteAlbum(
+            @Auth Principal principal,
+            @PathParam("albumId") String albumId) {
+
+        final Album album = albumQueryService.albumById(albumId);
+
+        if (!authorization.isAuthorized(principal, album)) {
+            throw new UserIsNotAuthorizedException(principal);
+        }
+
+        albumCommandService.deleteAlbum(albumId);
+        return Response.noContent().build();
+    }
+
+    @OPTIONS
+    @Timed
+    public Response preflight() {
+        return Response
+                .ok()
+                .header("Access-Control-Allow-Origin", "*")
+                .header("Access-Control-Allow-Methods", "GET,POST,DELETE")
+                .header("Access-Control-Allow-Headers", "Origin, Content-Type, Accept, Authorization")
+                .encoding("UTF-8")
+                .allow("GET", "POST", "DELETE")
+                .build();
     }
 }

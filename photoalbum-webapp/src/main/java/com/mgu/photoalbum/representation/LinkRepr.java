@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import org.apache.commons.lang3.StringUtils;
 
 import javax.ws.rs.HttpMethod;
+import javax.ws.rs.core.MediaType;
 import java.net.URI;
 
 public class LinkRepr {
@@ -14,6 +15,7 @@ public class LinkRepr {
         private String relation = StringUtils.EMPTY;
         private String href = StringUtils.EMPTY;
         private String method = HttpMethod.GET;
+        private String mediaType = MediaType.APPLICATION_JSON;
 
         public LinkReprBuilder relation(final String relation) {
             this.relation = relation;
@@ -35,6 +37,11 @@ public class LinkRepr {
             return this;
         }
 
+        public LinkReprBuilder mediaType(final String mediaType) {
+            this.mediaType = mediaType;
+            return this;
+        }
+
         public LinkRepr build() {
             return new LinkRepr(this);
         }
@@ -49,16 +56,21 @@ public class LinkRepr {
     @JsonProperty("method")
     private final String method;
 
-    public LinkRepr(final String relation, final String href, final String method) {
+    @JsonProperty("media")
+    private final String mediaType;
+
+    public LinkRepr(final String relation, final String href, final String method, final String mediaType) {
         this.relation = relation;
         this.href = href;
         this.method = method;
+        this.mediaType = mediaType;
     }
 
     private LinkRepr(final LinkReprBuilder builder) {
         this.relation = builder.relation;
         this.href = builder.href;
         this.method = builder.method;
+        this.mediaType = builder.mediaType;
     }
 
     public String getRelation() {
@@ -71,6 +83,10 @@ public class LinkRepr {
 
     public String getMethod() {
         return method;
+    }
+
+    public String getMediaType() {
+        return this.mediaType;
     }
 
     public static LinkReprBuilder create() {

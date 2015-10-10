@@ -4,16 +4,23 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.Collections;
-import java.util.LinkedList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class AlbumShortRepr {
 
     public static class AlbumShortReprBuilder {
 
+        private Map<String, LinkRepr> namedLinks = new HashMap<>();
+        private String albumId = StringUtils.EMPTY;
         private String title = StringUtils.EMPTY;
         private int numberOfPhotos = 0;
-        private List<LinkRepr> links = new LinkedList<>();
+
+        public AlbumShortReprBuilder id(final String albumId) {
+            this.albumId = albumId;
+            return this;
+        }
 
         public AlbumShortReprBuilder title(final String title) {
             this.title = title;
@@ -26,7 +33,7 @@ public class AlbumShortRepr {
         }
 
         public AlbumShortReprBuilder link(final LinkRepr link) {
-            this.links.add(link);
+            this.namedLinks.put(link.getRelation(), link);
             return this;
         }
 
@@ -35,6 +42,9 @@ public class AlbumShortRepr {
         }
     }
 
+    @JsonProperty("albumId")
+    private final String albumId;
+
     @JsonProperty("title")
     private final String title;
 
@@ -42,12 +52,17 @@ public class AlbumShortRepr {
     private final int numberOfPhotos;
 
     @JsonProperty("links")
-    private final List<LinkRepr> links;
+    private final Map<String, LinkRepr> namedLinks;
 
     private AlbumShortRepr(final AlbumShortReprBuilder builder) {
+        this.albumId = builder.albumId;
         this.title = builder.title;
         this.numberOfPhotos = builder.numberOfPhotos;
-        this.links = builder.links;
+        this.namedLinks = builder.namedLinks;
+    }
+
+    public String getAlbumId() {
+        return this.albumId;
     }
 
     public String getTitle() {
@@ -58,8 +73,8 @@ public class AlbumShortRepr {
         return numberOfPhotos;
     }
 
-    public List<LinkRepr> getLinks() {
-        return Collections.unmodifiableList(links);
+    public Map<String, LinkRepr> getNamedLinks() {
+        return Collections.unmodifiableMap(namedLinks);
     }
 
     public static AlbumShortReprBuilder create() {

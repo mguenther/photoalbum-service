@@ -176,4 +176,8 @@ public class Photo extends Document {
     public static PhotoBuilder create() {
         return new PhotoBuilder();
     }
+
+    public boolean anyTagMatches(final List<String> tags) {
+        return tags.isEmpty() || getTags().stream().anyMatch(tag -> tags.contains(tag));
+    }
 }

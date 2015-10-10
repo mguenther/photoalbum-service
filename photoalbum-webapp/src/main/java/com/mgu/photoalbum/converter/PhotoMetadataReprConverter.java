@@ -40,6 +40,7 @@ public class PhotoMetadataReprConverter implements Converter<Photo, PhotoMetadat
                                                 .href(linkScheme.toPhoto(photo.getAlbumId(), photo.getId()))
                                                 .method(HttpMethod.GET)
                                                 .relation("viewPhoto")
+                                                .mediaType("image/jpeg")
                                                 .build()
                                 )
                                 .link(
@@ -53,7 +54,7 @@ public class PhotoMetadataReprConverter implements Converter<Photo, PhotoMetadat
                                 .link(
                                         LinkRepr
                                                 .create()
-                                                .href(linkScheme.toMetadata(photo.getAlbumId(), photo.getId()))
+                                                .href(linkScheme.toPhoto(photo.getAlbumId(), photo.getId()))
                                                 .method(HttpMethod.PUT)
                                                 .relation("updateMetadata")
                                                 .build()
