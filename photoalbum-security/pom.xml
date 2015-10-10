@@ -10,8 +10,7 @@
     <artifactId>photoalbum-security</artifactId>
     <packaging>jar</packaging>
 
-    <name>photoalbum-security</name>
-    <url>http://maven.apache.org</url>
+    <name>[photoalbum] Security Component</name>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

@@ -1,7 +1,6 @@
 package com.mgu.photoalbum;
 
 import com.hubspot.dropwizard.guice.GuiceBundle;
-import com.mgu.photoalbum.config.DatabaseModule;
 import com.mgu.photoalbum.config.ServiceConfig;
 import com.mgu.photoalbum.config.ServiceModule;
 import com.mgu.photoalbum.security.Principal;
@@ -21,7 +20,6 @@ public class PhotoalbumApplication extends Application<ServiceConfig> {
     public void initialize(final Bootstrap<ServiceConfig> bootstrap) {
 
         this.guiceBundle = GuiceBundle.<ServiceConfig>newBuilder()
-                .addModule(new DatabaseModule())
                 .addModule(new ServiceModule())
                 .setConfigClass(ServiceConfig.class)
                 .enableAutoConfig(getClass().getPackage().getName())

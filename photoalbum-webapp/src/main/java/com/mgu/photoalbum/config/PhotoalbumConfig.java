@@ -14,18 +14,6 @@ public class PhotoalbumConfig {
     @Range(min = 0)
     private int maxCacheAge;
 
-    @JsonProperty("hostname")
-    @NotEmpty
-    private String hostname;
-
-    public String getHostname() {
-        return hostname;
-    }
-
-    public void setHostname(final String hostname) {
-        this.hostname = hostname;
-    }
-
     public String getImageArchivePath() {
         return imageArchivePath;
     }

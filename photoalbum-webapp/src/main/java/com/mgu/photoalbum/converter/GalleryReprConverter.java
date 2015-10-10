@@ -12,14 +12,14 @@ import javax.ws.rs.HttpMethod;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class GalleryConverter implements Converter<List<Album>, GalleryRepr> {
+public class GalleryReprConverter implements Converter<List<Album>, GalleryRepr> {
 
     private final LinkScheme linkScheme;
 
     private final AlbumShortReprConverter albumConverter;
 
     @Inject
-    public GalleryConverter(final LinkScheme linkScheme, final AlbumShortReprConverter albumConverter) {
+    public GalleryReprConverter(final LinkScheme linkScheme, final AlbumShortReprConverter albumConverter) {
         this.linkScheme = linkScheme;
         this.albumConverter = albumConverter;
     }

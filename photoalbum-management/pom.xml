@@ -10,8 +10,7 @@
     <artifactId>photoalbum-management</artifactId>
     <packaging>jar</packaging>
 
-    <name>photoalbum-management</name>
-    <url>http://maven.apache.org</url>
+    <name>[photoalbum] Asset Management</name>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

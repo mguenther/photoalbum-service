@@ -1,8 +1,11 @@
 package com.mgu.photoalbum.resource;
 
+import com.google.inject.Singleton;
+
 import javax.ws.rs.core.UriBuilder;
 import java.net.URI;
 
+@Singleton
 public class LinkScheme {
 
     private static final String GALLERY_URI_TEMPLATE = "/albums";

@@ -3,7 +3,7 @@ package com.mgu.photoalbum.resource;
 import com.codahale.metrics.annotation.Timed;
 import com.google.inject.Inject;
 import com.mgu.photoalbum.converter.AlbumShortReprConverter;
-import com.mgu.photoalbum.converter.GalleryConverter;
+import com.mgu.photoalbum.converter.GalleryReprConverter;
 import com.mgu.photoalbum.representation.CreateAlbumRepr;
 import com.mgu.photoalbum.representation.GalleryRepr;
 import com.mgu.photoalbum.security.Authorization;
@@ -28,7 +28,7 @@ public class AlbumsResource {
 
     private final LinkScheme linkScheme;
 
-    private final GalleryConverter galleryConverter;
+    private final GalleryReprConverter galleryConverter;
 
     @Inject
     public AlbumsResource(
@@ -39,7 +39,7 @@ public class AlbumsResource {
         this.commandService = commandService;
         this.authorization = authorization;
         this.linkScheme = new LinkScheme();
-        this.galleryConverter = new GalleryConverter(linkScheme, new AlbumShortReprConverter(linkScheme));
+        this.galleryConverter = new GalleryReprConverter(linkScheme, new AlbumShortReprConverter(linkScheme));
     }
 
     @POST

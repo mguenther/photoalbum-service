@@ -188,11 +188,6 @@
             <groupId>com.hubspot.dropwizard</groupId>
             <artifactId>dropwizard-guice</artifactId>
         </dependency>
-        <!-- Persistence -->
-        <dependency>
-            <groupId>org.ektorp</groupId>
-            <artifactId>org.ektorp</artifactId>
-        </dependency>
         <!-- Test -->
         <dependency>
             <groupId>junit</groupId>

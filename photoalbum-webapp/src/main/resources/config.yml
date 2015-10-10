@@ -1,0 +1,50 @@
+photoalbum:
+  imageArchivePath: ${photoalbum.archive.path}
+  maxCacheAge: ${photoalbum.caching.max_age}
+
+database:
+  url: ${database.url}
+  name: ${database.name}
+  user: ${database.user}
+  password: ${database.password}
+
+server:
+  registerDefaultExceptionMappers: true
+  requestLog:
+    timeZone: UTC
+    appenders:
+      - type: console
+      - type: file
+        currentLogFilename: ${log.request.file}
+        threshold: ALL
+        archive: ${log.request.archive_logs}
+        archivedLogFilenamePattern: ${log.request.archived_file}
+        archivedFileCount: ${log.request.max_archived_logs}
+  applicationConnectors:
+    - type: ${connector.type}
+      port: ${connector.port}
+
+logging:
+  # This is the default level of all loggers. Admissible log levels are
+  # [OFF, ERROR, WARN, INFO, DEBUG, TRACE, ALL]. This log level should be
+  # higher than the log level for everything that resides under
+  # com.cream.webapp (to shut up overly gossipy frameworks / libraries)
+  level: INFO
+  # sets the log level for our webapp
+  loggers:
+    com.cream: ${log.level}
+  # define log appenders for various log channels (console, file)
+  appenders:
+    # log to console
+    - type: console
+      threshold: ALL
+      logFormat: "%-6level [%d{HH:mm:ss.SSS}] [%t] %logger{5} - %X{code} %msg %n"
+    # log to file
+    - type: file
+      threshold: ALL
+      logFormat: "%-6level [%d{HH:mm:ss.SSS}] [%t] %logger{5} - %X{code} %msg %n"
+      currentLogFilename: ${log.file}
+      archive: ${log.archive_logs}
+      archivedLogFilenamePattern: ${log.archived_file}
+      archivedFileCount: ${log.max_archived_logs}
+      timeZone: UTC
