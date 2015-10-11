@@ -1,6 +1,7 @@
 package com.mgu.photoalbum.service;
 
 import com.google.inject.Inject;
+import com.mgu.photoalbum.adapter.fileio.PathAdapter;
 import com.mgu.photoalbum.domain.Album;
 import com.mgu.photoalbum.domain.Photo;
 import com.mgu.photoalbum.identity.IdGenerator;
@@ -23,6 +24,10 @@ public class AlbumService implements AlbumCommandService, AlbumQueryService {
 
     private final PhotoQueryService photoQueryService;
 
+    private final PathScheme pathScheme;
+
+    private final PathAdapter pathAdapter;
+
     private final Supplier<String> albumIdGenerator;
 
     @Inject
@@ -30,10 +35,14 @@ public class AlbumService implements AlbumCommandService, AlbumQueryService {
             final AlbumRepository repository,
             final PhotoCommandService photoCommandService,
             final PhotoQueryService photoQueryService,
+            final PathScheme pathScheme,
+            final PathAdapter pathAdapter,
             final IdGenerator idGenerator) {
         this.repository = repository;
         this.photoCommandService = photoCommandService;
         this.photoQueryService = photoQueryService;
+        this.pathScheme = pathScheme;
+        this.pathAdapter = pathAdapter;
         this.albumIdGenerator = () -> idGenerator.generateId("AL", 14);
     }
 
@@ -70,6 +79,7 @@ public class AlbumService implements AlbumCommandService, AlbumQueryService {
         final Album album = repository.get(albumId);
         repository.remove(album);
         photoCommandService.deletePhotos(albumId);
+        pathAdapter.deleteDirectory(pathScheme.constructPathToAlbumFolder(album.getOwnerId(), albumId));
         LOGGER.info("Removed album with ID " + albumId + " along with all associated photos.");
     }
 
