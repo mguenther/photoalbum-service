@@ -15,6 +15,7 @@ import org.slf4j.LoggerFactory;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.InputStream;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.function.Supplier;
@@ -61,7 +62,7 @@ public class PhotoService implements PhotoCommandService, PhotoQueryService {
             final String ownerId,
             final String albumId,
             final String originalFilename,
-            final String base64EncodedImage) {
+            final InputStream fileInputStream) {
 
         final String photoId = generateUniquePhotoId();
 
@@ -70,7 +71,7 @@ public class PhotoService implements PhotoCommandService, PhotoQueryService {
         Path thumbnailPath = pathScheme.constructPathToThumbnail(ownerId, albumId, photoId);
 
         pathAdapter.createDirectory(photoFolderPath);
-        pathAdapter.copy(inputStreamAdapter.getBase64DecodingInputStream(base64EncodedImage), originalPath);
+        pathAdapter.copy(fileInputStream, originalPath);
         pathAdapter.copyImage(generateThumbnail(originalPath), thumbnailPath);
 
         if (LOGGER.isDebugEnabled()) {

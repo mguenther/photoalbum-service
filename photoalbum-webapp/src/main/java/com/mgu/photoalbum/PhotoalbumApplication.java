@@ -1,13 +1,13 @@
 package com.mgu.photoalbum;
 
 import com.hubspot.dropwizard.guice.GuiceBundle;
-import com.mgu.photoalbum.config.CrossOriginConfig;
 import com.mgu.photoalbum.config.ServiceConfig;
 import com.mgu.photoalbum.config.ServiceModule;
 import com.mgu.photoalbum.security.Principal;
 import io.dropwizard.Application;
 import io.dropwizard.auth.AuthFactory;
 import io.dropwizard.auth.basic.BasicAuthFactory;
+import io.dropwizard.forms.MultiPartBundle;
 import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
 import org.eclipse.jetty.servlets.CrossOriginFilter;
@@ -31,6 +31,7 @@ public class PhotoalbumApplication extends Application<ServiceConfig> {
                 .enableAutoConfig(getClass().getPackage().getName())
                 .build();
         bootstrap.addBundle(guiceBundle);
+        bootstrap.addBundle(new MultiPartBundle());
     }
 
     @Override

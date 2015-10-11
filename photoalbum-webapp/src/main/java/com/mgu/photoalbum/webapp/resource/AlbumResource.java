@@ -16,10 +16,13 @@ import com.mgu.photoalbum.service.AlbumQueryService;
 import com.mgu.photoalbum.service.PhotoCommandService;
 import com.mgu.photoalbum.service.PhotoQueryService;
 import io.dropwizard.auth.Auth;
+import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
+import org.glassfish.jersey.media.multipart.FormDataParam;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -79,7 +82,7 @@ public class AlbumResource {
             @PathParam("albumId") String albumId,
             @QueryParam("offset") Optional<Integer> optionalOffset,
             @QueryParam("pageSize") Optional<Integer> optionalPageSize,
-            @QueryParam("tags") Optional<String> optionalTags)  {
+            @QueryParam("tags") Optional<String> optionalTags) {
 
         final Album album = albumQueryService.albumById(albumId);
 
@@ -107,16 +110,20 @@ public class AlbumResource {
     }
 
     @POST
-    @Consumes(MediaType.APPLICATION_JSON)
+    @Consumes("multipart/form-data")
     @Produces(MediaType.APPLICATION_JSON)
     @Timed
-    public Response uploadPhoto(
+    public Response upload(
             @Auth Principal principal,
             @PathParam("albumId") String albumId,
-            UploadPhotoRepr uploadPhotoRepr) {
+            @FormDataParam("image") InputStream fileInputStream,
+            @FormDataParam("image") FormDataContentDisposition contentDisposition) {
+
+        if (fileInputStream == null || contentDisposition == null) {
+            return Response.status(422).build(); // throw exception!
+        }
 
         final Album album = albumQueryService.albumById(albumId);
-
         if (!authorization.isAuthorized(principal, album)) {
             throw new UserIsNotAuthorizedException(principal);
         }
@@ -124,8 +131,8 @@ public class AlbumResource {
         final String photoId = photoCommandService.uploadPhoto(
                 principal.getUserId(),
                 albumId,
-                uploadPhotoRepr.getOriginalFilename(),
-                uploadPhotoRepr.getBase64EncodedImage());
+                contentDisposition.getFileName(),
+                fileInputStream);
 
         return Response.created(linkScheme.toPhoto(albumId, photoId)).build();
     }
