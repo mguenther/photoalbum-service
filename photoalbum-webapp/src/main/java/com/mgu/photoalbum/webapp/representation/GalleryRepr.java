@@ -35,12 +35,16 @@ public class GalleryRepr {
     @JsonProperty("_meta")
     private MetaRepr meta;
 
+    @JsonProperty("numberOfAlbums")
+    private int numberOfAlbums;
+
     @JsonProperty("albums")
     private List<AlbumShortRepr> albums = new LinkedList<>();
 
     private GalleryRepr(final GalleryReprBuilder builder) {
         this.meta = builder.meta;
         this.albums = builder.albums;
+        this.numberOfAlbums = albums.size();
     }
 
     public static GalleryReprBuilder create() {

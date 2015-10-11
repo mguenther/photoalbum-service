@@ -2,8 +2,6 @@ package com.mgu.photoalbum.service;
 
 import com.mgu.photoalbum.domain.Photo;
 
-import java.util.List;
-
 public interface PhotoQueryService {
 
     byte[] originalById(String id);
@@ -12,5 +10,5 @@ public interface PhotoQueryService {
 
     Photo photoById(String id);
 
-    List<Photo> search(String albumId, List<String> tags, int offset, int pageSize);
+    PhotoSearchResult search(PhotoSearchRequest searchQuery);
 }

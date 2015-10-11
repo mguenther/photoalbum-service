@@ -3,11 +3,7 @@ package com.mgu.photoalbum.webapp.resource;
 import com.codahale.metrics.annotation.Timed;
 import com.google.common.base.Optional;
 import com.google.inject.Inject;
-import com.mgu.photoalbum.webapp.converter.AlbumReprConverter;
 import com.mgu.photoalbum.domain.Album;
-import com.mgu.photoalbum.domain.Photo;
-import com.mgu.photoalbum.webapp.representation.AlbumRepr;
-import com.mgu.photoalbum.webapp.representation.UploadPhotoRepr;
 import com.mgu.photoalbum.security.Authorization;
 import com.mgu.photoalbum.security.Principal;
 import com.mgu.photoalbum.security.UserIsNotAuthorizedException;
@@ -15,32 +11,32 @@ import com.mgu.photoalbum.service.AlbumCommandService;
 import com.mgu.photoalbum.service.AlbumQueryService;
 import com.mgu.photoalbum.service.PhotoCommandService;
 import com.mgu.photoalbum.service.PhotoQueryService;
+import com.mgu.photoalbum.service.PhotoSearchRequest;
+import com.mgu.photoalbum.service.PhotoSearchResult;
+import com.mgu.photoalbum.webapp.converter.AlbumReprConverter;
+import com.mgu.photoalbum.webapp.representation.AlbumRepr;
 import io.dropwizard.auth.Auth;
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import org.glassfish.jersey.media.multipart.FormDataParam;
 
-import javax.ws.rs.*;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
+import javax.ws.rs.GET;
+import javax.ws.rs.OPTIONS;
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.io.InputStream;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static java.lang.Math.max;
-import static java.lang.Math.min;
-
 @Path("/albums/{albumId}")
 public class AlbumResource {
-
-    private static final int MAX_PAGE_SIZE = 100;
-
-    private static final int DEFAULT_OFFSET = 0;
-
-    private static final int DEFAULT_PAGE_SIZE = 10;
-
-    private static final List<String> DEFAULT_FILTER_BY_TAGS = new ArrayList<>();
 
     private final AlbumQueryService albumQueryService;
 
@@ -90,17 +86,15 @@ public class AlbumResource {
             throw new UserIsNotAuthorizedException(principal);
         }
 
-        final int offset = optionalOffset
-                .transform(wrappedOffset -> max(DEFAULT_OFFSET, wrappedOffset))
-                .or(DEFAULT_OFFSET);
-        final int pageSize = optionalPageSize
-                .transform(wrappedPageSize -> min(wrappedPageSize, MAX_PAGE_SIZE))
-                .or(DEFAULT_PAGE_SIZE);
-        final List<String> filterByTags = parseTags(optionalTags).or(DEFAULT_FILTER_BY_TAGS);
-
-
-        final List<Photo> photos = photoQueryService.search(albumId, filterByTags, offset, pageSize);
-        final AlbumRepr albumRepr = albumConverter.convert(album, photos, offset, pageSize, filterByTags);
+        final PhotoSearchRequest query = PhotoSearchRequest
+                .create()
+                .albumId(albumId)
+                .offset(optionalOffset)
+                .pageSize(optionalPageSize)
+                .tags(parseTags(optionalTags))
+                .build();
+        final PhotoSearchResult result = photoQueryService.search(query);
+        final AlbumRepr albumRepr = albumConverter.convert(album, query, result);
 
         return Response.ok(albumRepr).build();
     }

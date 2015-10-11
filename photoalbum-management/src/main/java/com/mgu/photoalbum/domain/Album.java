@@ -10,10 +10,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
 public class Album extends Document {
 
     public static final String DOCUMENT_TYPE = "album";
@@ -31,8 +27,6 @@ public class Album extends Document {
         private DateTime created = DateTime.now(DateTimeZone.UTC);
 
         private DateTime lastModified = DateTime.now(DateTimeZone.UTC);
-
-        private List<String> containingPhotos = new ArrayList<>();
 
         public AlbumBuilder id(final String albumId) {
             this.albumId = albumId;
@@ -70,9 +64,6 @@ public class Album extends Document {
     @JsonProperty("title")
     private String title;
 
-    @JsonProperty("photos")
-    private List<String> containingPhotos = new ArrayList<>();
-
     private Album() {
         super(DOCUMENT_TYPE);
     }
@@ -84,7 +75,6 @@ public class Album extends Document {
         this.created = builder.created;
         this.lastModified = builder.lastModified;
         this.title = builder.title;
-        this.containingPhotos.addAll(builder.containingPhotos);
     }
 
     public String getOwnerId() {
@@ -101,20 +91,6 @@ public class Album extends Document {
 
     public String getTitle() {
         return title;
-    }
-
-    public List<String> getContainingPhotos() {
-        return Collections.unmodifiableList(containingPhotos);
-    }
-
-    public void associatePhoto(final String photoId) {
-        this.containingPhotos.add(photoId);
-        this.lastModified = DateTime.now(DateTimeZone.UTC);
-    }
-
-    public void dissociatePhoto(final String photoId) {
-        this.containingPhotos.remove(photoId);
-        this.lastModified = DateTime.now(DateTimeZone.UTC);
     }
 
     public static AlbumBuilder create() {

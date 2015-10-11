@@ -8,5 +8,5 @@ public interface AlbumQueryService {
 
     Album albumById(final String id);
 
-    List<Album> albumsByOwner(final String ownerId);
+    AlbumSearchResult search(final AlbumSearchRequest searchRequest);
 }

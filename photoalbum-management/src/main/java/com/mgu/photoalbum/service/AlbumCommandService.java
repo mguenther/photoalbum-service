@@ -5,6 +5,4 @@ public interface AlbumCommandService {
     String createAlbum(String ownerId, String title);
 
     void deleteAlbum(String id);
-
-    void removePhotoFromAlbum(String albumId, String photoId);
 }

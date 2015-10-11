@@ -12,11 +12,17 @@ public class PhotoMetadataRepr {
     public static class PhotoMetadataReprBuilder {
 
         private MetaRepr meta = MetaRepr.create().build();
+        private String photoId = StringUtils.EMPTY;
         private String description = StringUtils.EMPTY;
         private List<String> tags = new LinkedList<>();
 
         public PhotoMetadataReprBuilder meta(final MetaRepr meta) {
             this.meta = meta;
+            return this;
+        }
+
+        public PhotoMetadataReprBuilder id(final String photoId) {
+            this.photoId = photoId;
             return this;
         }
 
@@ -38,6 +44,9 @@ public class PhotoMetadataRepr {
     @JsonProperty("_meta")
     private final MetaRepr meta;
 
+    @JsonProperty("photoId")
+    private final String photoId;
+
     @JsonProperty("description")
     private final String description;
 
@@ -46,12 +55,17 @@ public class PhotoMetadataRepr {
 
     private PhotoMetadataRepr(final PhotoMetadataReprBuilder builder) {
         this.meta = builder.meta;
+        this.photoId = builder.photoId;
         this.description = builder.description;
         this.tags = builder.tags;
     }
 
     public MetaRepr getMeta() {
         return this.meta;
+    }
+
+    public String getPhotoId() {
+        return this.photoId;
     }
 
     public String getDescription() {

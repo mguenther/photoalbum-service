@@ -21,10 +21,7 @@ public class AlbumGenerator implements Generator {
         List<Album> albumsToCreate = new ArrayList<Album>() {{
 
             final Album hamburg = Album.create().createdBy("CU-zkVDzWSctsEqqk").id("AL-zk3Dz0Sct9XccF").title("Hamburg 2014").build();
-            hamburg.associatePhoto("PH-aB34z0013t9XccF");
-
             final Album jersey = Album.create().createdBy("CU-zkVDzWSctsEqqk").id("AL-vcdjke39svm292").title("Jersey 2014").build();
-            jersey.associatePhoto("PH-aBffzee1ddddccF");
 
             add(hamburg);
             add(jersey);

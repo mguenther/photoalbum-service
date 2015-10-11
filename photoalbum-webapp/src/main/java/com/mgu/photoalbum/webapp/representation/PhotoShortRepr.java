@@ -12,9 +12,15 @@ public class PhotoShortRepr {
 
     public static class PhotoShortReprBuilder {
 
+        private String photoId;
         private String description;
         private List<String> tags = new LinkedList<>();
         private Map<String, LinkRepr> namedLinks = new HashMap<>();
+
+        public PhotoShortReprBuilder id(final String photoId) {
+            this.photoId = photoId;
+            return this;
+        }
 
         public PhotoShortReprBuilder description(final String description) {
             this.description = description;
@@ -36,6 +42,9 @@ public class PhotoShortRepr {
         }
     }
 
+    @JsonProperty("photoId")
+    private final String photoId;
+
     @JsonProperty("description")
     private final String description;
 
@@ -46,9 +55,14 @@ public class PhotoShortRepr {
     private final Map<String, LinkRepr> namedLinks;
 
     private PhotoShortRepr(final PhotoShortReprBuilder builder) {
+        this.photoId = builder.photoId;
         this.description = builder.description;
         this.tags = builder.tags;
         this.namedLinks = builder.namedLinks;
+    }
+
+    public String getPhotoId() {
+        return this.photoId;
     }
 
     public String getDescription() {

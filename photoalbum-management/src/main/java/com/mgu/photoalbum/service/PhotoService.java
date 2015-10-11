@@ -106,6 +106,11 @@ public class PhotoService implements PhotoCommandService, PhotoQueryService {
     }
 
     @Override
+    public void deletePhotos(final String albumId) {
+        repository.getAllByAlbum(albumId).forEach(photo -> deletePhoto(photo.getId()));
+    }
+
+    @Override
     public void deletePhoto(final String photoId) {
         if (!repository.contains(photoId)) {
             throw new PhotoDoesNotExistException(photoId);
@@ -115,8 +120,6 @@ public class PhotoService implements PhotoCommandService, PhotoQueryService {
         repository.remove(photo);
 
         LOGGER.info("Removed photo with ID " + photoId + " from photo album with ID " + photo.getAlbumId() + ".");
-        // TODO (mgu): Should not be necessary and we need to get rid of that dependency!
-        albumCommandService.removePhotoFromAlbum(photo.getAlbumId(), photoId);
     }
 
     private void deletePhotoFiles(final String ownerId, final String albumId, final String photoId) {
@@ -193,13 +196,14 @@ public class PhotoService implements PhotoCommandService, PhotoQueryService {
     }
 
     @Override
-    public List<Photo> search(final String albumId, final List<String> tags, final int offset, final int pageSize) {
-        return repository
-                .getAllByAlbum(albumId)
+    public PhotoSearchResult search(final PhotoSearchRequest searchQuery) {
+        final List<Photo> photosInAlbum = repository.getAllByAlbum(searchQuery.getAlbumId());
+        final List<Photo> filteredPhotos = photosInAlbum
                 .stream()
-                .filter(photo -> photo.anyTagMatches(tags))
-                .skip(offset)
-                .limit(pageSize)
+                .filter(photo -> photo.anyTagMatches(searchQuery.getTags()))
+                .skip(searchQuery.getOffset())
+                .limit(searchQuery.getPageSize())
                 .collect(Collectors.toList());
+        return new PhotoSearchResult(photosInAlbum.size(), filteredPhotos);
     }
 }

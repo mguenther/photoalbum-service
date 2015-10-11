@@ -2,16 +2,16 @@ package com.mgu.photoalbum.service;
 
 import com.google.inject.Inject;
 import com.mgu.photoalbum.domain.Album;
+import com.mgu.photoalbum.domain.Photo;
 import com.mgu.photoalbum.identity.IdGenerator;
 import com.mgu.photoalbum.storage.AlbumRepository;
-import org.ektorp.UpdateConflictException;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.function.Supplier;
+import java.util.stream.Collectors;
 
 public class AlbumService implements AlbumCommandService, AlbumQueryService {
 
@@ -19,7 +19,9 @@ public class AlbumService implements AlbumCommandService, AlbumQueryService {
 
     private final AlbumRepository repository;
 
-    private PhotoCommandService photoCommandService;
+    private final PhotoCommandService photoCommandService;
+
+    private final PhotoQueryService photoQueryService;
 
     private final Supplier<String> albumIdGenerator;
 
@@ -27,9 +29,11 @@ public class AlbumService implements AlbumCommandService, AlbumQueryService {
     public AlbumService(
             final AlbumRepository repository,
             final PhotoCommandService photoCommandService,
+            final PhotoQueryService photoQueryService,
             final IdGenerator idGenerator) {
         this.repository = repository;
         this.photoCommandService = photoCommandService;
+        this.photoQueryService = photoQueryService;
         this.albumIdGenerator = () -> idGenerator.generateId("AL", 14);
     }
 
@@ -63,23 +67,9 @@ public class AlbumService implements AlbumCommandService, AlbumQueryService {
             return;
         }
         final Album album = repository.get(albumId);
-        album.getContainingPhotos().forEach(photoId -> photoCommandService.deletePhoto(photoId));
         repository.remove(album);
+        photoCommandService.deletePhotos(albumId);
         LOGGER.info("Removed album with ID " + albumId + " along with all associated photos.");
-    }
-
-    @Override
-    public void removePhotoFromAlbum(String albumId, String photoId) {
-        if (!repository.contains(albumId)) {
-            return;
-        }
-        final Album album = repository.get(albumId);
-        album.dissociatePhoto(photoId);
-        try {
-            repository.update(album);
-        } catch (UpdateConflictException e) {
-            throw new UnableToUpdateAlbumException(albumId, e);
-        }
     }
 
     @Override
@@ -92,9 +82,26 @@ public class AlbumService implements AlbumCommandService, AlbumQueryService {
     }
 
     @Override
-    public List<Album> albumsByOwner(final String ownerId) {
-        final List<Album> albumsByOwner = new ArrayList<>();
-        albumsByOwner.addAll(repository.getAllByOwner(ownerId));
-        return Collections.unmodifiableList(albumsByOwner);
+    public AlbumSearchResult search(final AlbumSearchRequest searchRequest) {
+        final List<AlbumHit> hits = repository
+                .getAllByOwner(searchRequest.getOwnerId())
+                .stream()
+                .map(album -> new AlbumHit(album, numberOfPhotosInAlbum(album.getId()), randomThumbnailId(album.getId())))
+                .collect(Collectors.toList());
+        return new AlbumSearchResult(hits.size(), hits);
+    }
+
+    private int numberOfPhotosInAlbum(final String albumId) {
+        return photoQueryService.search(PhotoSearchRequest.create().albumId(albumId).build()).getHitCount();
+    }
+
+    private String randomThumbnailId(final String albumId) {
+        return photoQueryService
+                .search(PhotoSearchRequest.create().albumId(albumId).build())
+                .getHits()
+                .stream()
+                .findFirst()
+                .map((Photo p) -> p.getId())
+                .orElse(StringUtils.EMPTY);
     }
 }

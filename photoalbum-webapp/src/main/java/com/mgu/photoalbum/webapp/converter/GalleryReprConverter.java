@@ -2,6 +2,7 @@ package com.mgu.photoalbum.webapp.converter;
 
 import com.google.inject.Inject;
 import com.mgu.photoalbum.domain.Album;
+import com.mgu.photoalbum.service.AlbumSearchResult;
 import com.mgu.photoalbum.webapp.representation.AlbumShortRepr;
 import com.mgu.photoalbum.webapp.representation.GalleryRepr;
 import com.mgu.photoalbum.webapp.representation.LinkRepr;
@@ -12,7 +13,7 @@ import javax.ws.rs.HttpMethod;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class GalleryReprConverter implements Converter<List<Album>, GalleryRepr> {
+public class GalleryReprConverter implements Converter<AlbumSearchResult, GalleryRepr> {
 
     private final LinkScheme linkScheme;
 
@@ -25,9 +26,9 @@ public class GalleryReprConverter implements Converter<List<Album>, GalleryRepr>
     }
 
     @Override
-    public GalleryRepr convert(final List<Album> albums) {
+    public GalleryRepr convert(final AlbumSearchResult searchResult) {
 
-        final List<AlbumShortRepr> albumShortReprs = albums
+        final List<AlbumShortRepr> albumShortReprs = searchResult.getHits()
                 .stream()
                 .map(albumConverter::convert)
                 .collect(Collectors.toList());

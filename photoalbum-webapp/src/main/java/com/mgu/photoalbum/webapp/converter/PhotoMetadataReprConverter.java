@@ -61,6 +61,7 @@ public class PhotoMetadataReprConverter implements Converter<Photo, PhotoMetadat
                                 )
                                 .build()
                 )
+                .id(photo.getId())
                 .description(photo.getDescription())
                 .tag(photo.getTags())
                 .build();

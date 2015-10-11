@@ -22,6 +22,7 @@ public class PhotoShortReprConverter implements Converter<Photo, PhotoShortRepr>
 
         return PhotoShortRepr
                 .create()
+                .id(photo.getId())
                 .description(descriptionOf(photo))
                 .tags(photo.getTags())
                 .link(

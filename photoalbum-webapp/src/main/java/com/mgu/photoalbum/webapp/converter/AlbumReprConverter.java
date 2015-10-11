@@ -2,7 +2,8 @@ package com.mgu.photoalbum.webapp.converter;
 
 import com.google.inject.Inject;
 import com.mgu.photoalbum.domain.Album;
-import com.mgu.photoalbum.domain.Photo;
+import com.mgu.photoalbum.service.PhotoSearchRequest;
+import com.mgu.photoalbum.service.PhotoSearchResult;
 import com.mgu.photoalbum.webapp.representation.AlbumRepr;
 import com.mgu.photoalbum.webapp.representation.LinkRepr;
 import com.mgu.photoalbum.webapp.representation.MetaRepr;
@@ -25,9 +26,10 @@ public class AlbumReprConverter {
         this.photoConverter = photoConverter;
     }
 
-    public AlbumRepr convert(final Album album, final List<Photo> photos, final int offset, final int pageSize, final List<String> tags) {
+    public AlbumRepr convert(final Album album, final PhotoSearchRequest searchQuery, final PhotoSearchResult searchResult) {
 
-        final List<PhotoShortRepr> photoShortReprs = photos
+        final List<PhotoShortRepr> photoShortReprs = searchResult
+                .getHits()
                 .stream()
                 .map(photoConverter::convert)
                 .collect(Collectors.toList());
@@ -70,11 +72,11 @@ public class AlbumReprConverter {
                                 )
                                 .build()
                 )
-                .numberOfPhotos(album.getContainingPhotos().size())
+                .numberOfPhotos(searchResult.getTotal())
                 .photo(photoShortReprs)
-                .offset(offset)
-                .pageSize(pageSize)
-                .tag(tags)
+                .offset(searchQuery.getOffset())
+                .pageSize(searchQuery.getPageSize())
+                .tag(searchQuery.getTags())
                 .title(album.getTitle())
                 .build();
     }

@@ -2,6 +2,8 @@ package com.mgu.photoalbum.webapp.resource;
 
 import com.codahale.metrics.annotation.Timed;
 import com.google.inject.Inject;
+import com.mgu.photoalbum.service.AlbumSearchRequest;
+import com.mgu.photoalbum.service.AlbumSearchResult;
 import com.mgu.photoalbum.webapp.converter.AlbumShortReprConverter;
 import com.mgu.photoalbum.webapp.converter.GalleryReprConverter;
 import com.mgu.photoalbum.webapp.representation.CreateAlbumRepr;
@@ -56,10 +58,15 @@ public class AlbumsResource {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Timed
-    public Response listAlbums(
-            @Auth Principal principal) {
+    public Response listAlbums(@Auth Principal principal) {
 
-        final GalleryRepr galleryRepr = galleryConverter.convert(queryService.albumsByOwner(principal.getUserId()));
+        final AlbumSearchRequest searchRequest = AlbumSearchRequest
+                .create()
+                .createdBy(principal.getUserId())
+                .build();
+        final AlbumSearchResult searchResult = queryService.search(searchRequest);
+
+        final GalleryRepr galleryRepr = galleryConverter.convert(searchResult);
         return Response.ok(galleryRepr).build();
     }
 
