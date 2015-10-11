@@ -94,7 +94,7 @@ public class AlbumResource {
                 .tags(parseTags(optionalTags))
                 .build();
         final PhotoSearchResult result = photoQueryService.search(query);
-        final AlbumRepr albumRepr = albumConverter.convert(album, query, result);
+        final AlbumRepr albumRepr = albumConverter.convert(album, result);
 
         return Response.ok(albumRepr).build();
     }

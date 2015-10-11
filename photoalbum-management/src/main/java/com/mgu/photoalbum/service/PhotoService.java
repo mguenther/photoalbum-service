@@ -1,7 +1,6 @@
 package com.mgu.photoalbum.service;
 
 import com.google.inject.Inject;
-import com.mgu.photoalbum.adapter.fileio.InputStreamAdapter;
 import com.mgu.photoalbum.adapter.fileio.PathAdapter;
 import com.mgu.photoalbum.domain.Photo;
 import com.mgu.photoalbum.identity.IdGenerator;
@@ -33,8 +32,6 @@ public class PhotoService implements PhotoCommandService, PhotoQueryService {
 
     private final PathAdapter pathAdapter;
 
-    private final InputStreamAdapter inputStreamAdapter;
-
     private final ImageScaler scaler;
 
     private final Supplier<String> photoIdGenerator;
@@ -45,13 +42,11 @@ public class PhotoService implements PhotoCommandService, PhotoQueryService {
             final PhotoRepository repository,
             final PathScheme pathScheme,
             final PathAdapter pathAdapter,
-            final InputStreamAdapter inputStreamAdapter,
             final IdGenerator idGenerator,
             final ImageScaler scaler) {
         this.repository = repository;
         this.albumCommandService = albumCommandService;
         this.pathAdapter = pathAdapter;
-        this.inputStreamAdapter = inputStreamAdapter;
         this.pathScheme = pathScheme;
         this.scaler = scaler;
         this.photoIdGenerator = () -> idGenerator.generateId(14);
@@ -113,7 +108,9 @@ public class PhotoService implements PhotoCommandService, PhotoQueryService {
     @Override
     public void deletePhoto(final String photoId) {
         if (!repository.contains(photoId)) {
-            throw new PhotoDoesNotExistException(photoId);
+            // we are already in converged state, so no action is taken
+            LOGGER.debug("Received a delete command for a non-existing photo (ID " + photoId + ").");
+            return;
         }
         final Photo photo = repository.get(photoId);
         deletePhotoFiles(photo.getOwnerId(), photo.getAlbumId(), photoId);
@@ -196,14 +193,14 @@ public class PhotoService implements PhotoCommandService, PhotoQueryService {
     }
 
     @Override
-    public PhotoSearchResult search(final PhotoSearchRequest searchQuery) {
-        final List<Photo> photosInAlbum = repository.getAllByAlbum(searchQuery.getAlbumId());
+    public PhotoSearchResult search(final PhotoSearchRequest searchRequest) {
+        final List<Photo> photosInAlbum = repository.getAllByAlbum(searchRequest.getAlbumId());
         final List<Photo> filteredPhotos = photosInAlbum
                 .stream()
-                .filter(photo -> photo.anyTagMatches(searchQuery.getTags()))
-                .skip(searchQuery.getOffset())
-                .limit(searchQuery.getPageSize())
+                .filter(photo -> photo.anyTagMatches(searchRequest.getTags()))
+                .skip(searchRequest.getOffset())
+                .limit(searchRequest.getPageSize())
                 .collect(Collectors.toList());
-        return new PhotoSearchResult(photosInAlbum.size(), filteredPhotos);
+        return new PhotoSearchResult(searchRequest, photosInAlbum.size(), filteredPhotos);
     }
 }

@@ -64,6 +64,7 @@ public class AlbumService implements AlbumCommandService, AlbumQueryService {
             // deleting an existing album and trying to delete a non-existing album leads to the
             // same state convergence. thus, we do not treat a deletion request to a non-existing album
             // not as an error, but return immediately
+            LOGGER.debug("Received a delete command for a non-existing album (ID " + albumId + ").");
             return;
         }
         final Album album = repository.get(albumId);
@@ -73,11 +74,11 @@ public class AlbumService implements AlbumCommandService, AlbumQueryService {
     }
 
     @Override
-    public Album albumById(final String id) {
-        if (!repository.contains(id)) {
-            throw new AlbumDoesNotExistException(id);
+    public Album albumById(final String albumId) {
+        if (!repository.contains(albumId)) {
+            throw new AlbumDoesNotExistException(albumId);
         }
-        final Album album = repository.get(id);
+        final Album album = repository.get(albumId);
         return album;
     }
 
@@ -88,7 +89,7 @@ public class AlbumService implements AlbumCommandService, AlbumQueryService {
                 .stream()
                 .map(album -> new AlbumHit(album, numberOfPhotosInAlbum(album.getId()), randomThumbnailId(album.getId())))
                 .collect(Collectors.toList());
-        return new AlbumSearchResult(hits.size(), hits);
+        return new AlbumSearchResult(searchRequest, hits.size(), hits);
     }
 
     private int numberOfPhotosInAlbum(final String albumId) {

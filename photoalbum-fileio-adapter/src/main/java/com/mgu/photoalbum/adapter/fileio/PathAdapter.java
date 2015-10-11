@@ -14,10 +14,27 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
 
+/**
+ * Provides the means to handle basic I/O using {@link Path}.
+ *
+ * @author Markus Günther (markus.guenther@gmail.com)
+ */
 public class PathAdapter {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(PathAdapter.class);
 
+    /**
+     * Reads the contents of the file located at {@code Path} and returns them as
+     * byte array.
+     *
+     * @param path
+     *      refers to a location on the filesystem
+     * @throws UnableToReadFromFilesystemException
+     *      in case the read operation fails
+     * @return
+     *      {@code byte[]} array containing all the bytes that were read from
+     *      the file located at the given {@code Path}
+     */
     public byte[] readBytes(final Path path) {
         try {
             return convertToBytes(Files.newInputStream(path));
@@ -26,19 +43,6 @@ public class PathAdapter {
         }
     }
 
-    /**
-     * Reads in all bytes from the given {@link InputStream} and returns them as
-     * byte array.
-     *
-     * @param in
-     * 		Represents the {@link InputStream} from which to read
-     * @throws IOException
-     * 		In case reading from the given {@link InputStream} raises an
-     *      {@link IOException}
-     * @return
-     * 		<code>byte[]</code> array containing all the bytes that were
-     *      read from the given {@link InputStream}
-     */
     private byte[] convertToBytes(final InputStream in) throws IOException {
         try {
             return IOUtils.toByteArray(in);
@@ -50,6 +54,17 @@ public class PathAdapter {
         }
     }
 
+    /**
+     * Reads the contents of the file located at {@code Path} as String (binary-safe).
+     *
+     * @param path
+     *      refers to a location on the filesystem
+     * @throws UnableToReadFromFilesystemException
+     *      in case the read operation fails
+     * @return
+     *      the contents of the file located at the given {@code Path} in form
+     *      of a binary-safe {@link String}
+     */
     public String readString(final Path path) {
         try {
             return convertToString(Files.newInputStream(path));

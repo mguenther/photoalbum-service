@@ -5,6 +5,12 @@ import org.apache.commons.lang3.StringUtils;
 
 import java.util.List;
 
+/**
+ * A concurrent update of the associated photo prevented the user-requested update
+ * of the photos metadata.
+ *
+ * @author Markus Günther (markus.guenther@gmail.com)
+ */
 public class UnableToUpdateMetadataException extends PhotoalbumException {
 
     private static final String ERROR_MESSAGE = "Unable to set description to %s and replace existing tags by %s for photo with ID %s.";

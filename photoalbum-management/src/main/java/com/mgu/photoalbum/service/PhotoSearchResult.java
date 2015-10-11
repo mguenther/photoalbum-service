@@ -7,11 +7,14 @@ import java.util.List;
 
 public class PhotoSearchResult {
 
+    private final PhotoSearchRequest searchRequest;
+
     private final int total;
 
     private final List<Photo> hits;
 
-    public PhotoSearchResult(final int total, final List<Photo> hits) {
+    public PhotoSearchResult(final PhotoSearchRequest searchRequest, final int total, final List<Photo> hits) {
+        this.searchRequest = searchRequest;
         this.total = total;
         this.hits = hits;
     }
@@ -26,5 +29,9 @@ public class PhotoSearchResult {
 
     public List<Photo> getHits() {
         return Collections.unmodifiableList(hits);
+    }
+
+    public PhotoSearchRequest getSearchRequest() {
+        return this.searchRequest;
     }
 }

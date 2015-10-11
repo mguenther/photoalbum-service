@@ -6,6 +6,11 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Base64;
 
+/**
+ * Provides some convenience methods to handle {@link InputStream}.
+ *
+ * @author Markus Günther (markus.guenther@gmail.com)
+ */
 public class InputStreamAdapter {
 
     public InputStream getBase64DecodingInputStream(final String base64EncodedData) {

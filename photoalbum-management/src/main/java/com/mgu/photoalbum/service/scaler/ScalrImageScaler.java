@@ -9,6 +9,11 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
+/**
+ * Implementation of {@link ImageScaler} which favors speed over quality.
+ *
+ * @author Markus Günther (markus.guenther@gmail.com)
+ */
 public class ScalrImageScaler implements  ImageScaler {
 
     @Override

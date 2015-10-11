@@ -15,6 +15,19 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * A {@code Photo} is a managed resource that has been created by a user (referred to
+ * as the owner) and belongs to an existing {@link Album}. Its lifetime is bound to the
+ * lifetime of the {@link Album} it belongs to. As such, if the corresponding {@link Album}
+ * is deleted, all its containing photos are as well.
+ *
+ * A {@code Photo} can be tagged.
+ *
+ * Only owners are granted the right to access their photo and perform modifications
+ * on it.
+ *
+ * @author Markus Günther (markus.guenther@gmail.com)
+ */
 public class Photo extends Document {
 
     public static final String DOCUMENT_TYPE = "photo";

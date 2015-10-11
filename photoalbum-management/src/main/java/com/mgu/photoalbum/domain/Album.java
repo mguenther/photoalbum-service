@@ -10,6 +10,15 @@ import org.apache.commons.lang3.StringUtils;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
 
+/**
+ * A {@code Album} is a managed resource that has been created by user (referred to as owner) and
+ * contains {@link Photo}s. This association is inversely implemented within the system: Photos know
+ * to which albums they belong to.
+ *
+ * Only owners are granted the right to access their albums and perform modifications on it.
+ *
+ * @author Markus Günther (markus.guenther@gmail.com)
+ */
 public class Album extends Document {
 
     public static final String DOCUMENT_TYPE = "album";

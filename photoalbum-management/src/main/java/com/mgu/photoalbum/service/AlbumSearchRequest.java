@@ -2,6 +2,11 @@ package com.mgu.photoalbum.service;
 
 import org.apache.commons.lang3.StringUtils;
 
+/**
+ * Container for Album-related search parameters.
+ *
+ * @author Markus Günther (markus.guenther@gmail.com)
+ */
 public class AlbumSearchRequest {
 
     public static class AlbumSearchRequestBuilder {

@@ -2,7 +2,6 @@ package com.mgu.photoalbum.webapp.converter;
 
 import com.google.inject.Inject;
 import com.mgu.photoalbum.domain.Album;
-import com.mgu.photoalbum.service.PhotoSearchRequest;
 import com.mgu.photoalbum.service.PhotoSearchResult;
 import com.mgu.photoalbum.webapp.representation.AlbumRepr;
 import com.mgu.photoalbum.webapp.representation.LinkRepr;
@@ -14,7 +13,7 @@ import javax.ws.rs.HttpMethod;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class AlbumReprConverter {
+public class AlbumReprConverter implements BiConverter<Album, PhotoSearchResult, AlbumRepr> {
 
     private final LinkScheme linkScheme;
 
@@ -26,7 +25,7 @@ public class AlbumReprConverter {
         this.photoConverter = photoConverter;
     }
 
-    public AlbumRepr convert(final Album album, final PhotoSearchRequest searchQuery, final PhotoSearchResult searchResult) {
+    public AlbumRepr convert(final Album album, final PhotoSearchResult searchResult) {
 
         final List<PhotoShortRepr> photoShortReprs = searchResult
                 .getHits()
@@ -74,9 +73,9 @@ public class AlbumReprConverter {
                 )
                 .numberOfPhotos(searchResult.getTotal())
                 .photo(photoShortReprs)
-                .offset(searchQuery.getOffset())
-                .pageSize(searchQuery.getPageSize())
-                .tag(searchQuery.getTags())
+                .offset(searchResult.getSearchRequest().getOffset())
+                .pageSize(searchResult.getSearchRequest().getPageSize())
+                .tag(searchResult.getSearchRequest().getTags())
                 .title(album.getTitle())
                 .build();
     }

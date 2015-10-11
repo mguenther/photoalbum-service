@@ -2,6 +2,13 @@ package com.mgu.photoalbum.adapter.fileio;
 
 import com.mgu.photoalbum.exception.PhotoalbumException;
 
+/**
+ * This exception is raised whenever a copy operation to the filesystem (from any I/O resource) or to a
+ * different location on the filesystem fails. Causes for this are manifold. Thus, the root cause is retained
+ * with this exception.
+ *
+ * @author Markus Günther (markus.guenther@gmail.com)
+ */
 public class UnableToCopyFileException extends PhotoalbumException {
 
     private static final String ERROR_MESSAGE_ONLY_DESTINATION = "Unable to write data to %s.";

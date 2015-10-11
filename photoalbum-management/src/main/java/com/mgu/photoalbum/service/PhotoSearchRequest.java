@@ -10,6 +10,11 @@ import java.util.List;
 import static java.lang.Math.max;
 import static java.lang.Math.min;
 
+/**
+ * Container for photo-related search parameters. Also applies input parameter sanitizing.
+ *
+ * @author Markus Günther (markus.guenther@gmail.com)
+ */
 public class PhotoSearchRequest {
 
     private static final int MIN_OFFSET = 0;

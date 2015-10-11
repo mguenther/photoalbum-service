@@ -5,11 +5,14 @@ import java.util.List;
 
 public class AlbumSearchResult {
 
+    private final AlbumSearchRequest searchRequest;
+
     private final int total;
 
     private final List<AlbumHit> hits;
 
-    public AlbumSearchResult(final int total, final List<AlbumHit> hits) {
+    public AlbumSearchResult(final AlbumSearchRequest searchRequest, final int total, final List<AlbumHit> hits) {
+        this.searchRequest = searchRequest;
         this.total = total;
         this.hits = hits;
     }
@@ -24,5 +27,9 @@ public class AlbumSearchResult {
 
     public List<AlbumHit> getHits() {
         return Collections.unmodifiableList(hits);
+    }
+
+    public AlbumSearchRequest getSearchRequest() {
+        return this.searchRequest;
     }
 }
