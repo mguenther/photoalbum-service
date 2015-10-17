@@ -49,20 +49,10 @@ public class PhotoSearchRequest {
             return this;
         }
 
-        public PhotoSearchRequestBuilder offset(final int offset) {
-            this.offset = offset;
-            return this;
-        }
-
         public PhotoSearchRequestBuilder offset(final Optional<Integer> optionalOffset) {
             this.offset = optionalOffset
                     .transform(wrappedOffset -> max(DEFAULT_OFFSET, wrappedOffset))
                     .or(DEFAULT_OFFSET);
-            return this;
-        }
-
-        public PhotoSearchRequestBuilder pageSize(final int pageSize) {
-            this.pageSize = pageSize;
             return this;
         }
 
