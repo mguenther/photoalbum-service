@@ -1,6 +1,6 @@
 # Dropwizard by Example: Photoalbum Webservice
 
-As part of learning Dropwizard, I cobbled together a small sample webservice that allows users to manage photo albums and exposes its API via HTTP.
+As part of learning Dropwizard, I cobbled together a small sample webservice that allows users to manage photo albums and exposes its API via HTTP. All functional requirements have been implemented and are fully working.
 
 ## Requirements
 
@@ -16,11 +16,18 @@ Given that this is first and foremost an educational project and focuses on buil
 
 The same applies for non-functional requirements:
 
-* Features do not have to be fully fleshed out.
+* Technical aspects (e.g. security, technical data model) do not have to be fully fleshed out.
 * Albums and photos are stored as documents within a CouchDB. This gives us update isolation on the level of a document, but not an aggregate of documents. The decision to use CouchDB as data store was primarily driven by the fact that I have used it before and get it up to speed using the provided CouchDB adapter very quickly.
 * User management is negligible. However, to showcase the integration of a custom security component for authentication and authorization, at least a read-only model for users must be implemented.
 * Strive for code clarity instead of algorithmic speed or efficiency.
 * The exposed HTTP API should not enforce any kind of strong coupling between the API and a client implementation.
+
+## Limitations
+
+Please keep in mind that this example application has been written for educational purposes only and is not ready for production.
+
+* Given that there is strong association between albums and photos, some sort of transactional context when removing an entire album would be beneficial.
+* User passwords are SHA-1-hashed instead of using a stronger, adaptive mechanism like bcrypt. 
 
 ## Modules
 
