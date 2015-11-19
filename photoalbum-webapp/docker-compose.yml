@@ -1,0 +1,11 @@
+couchdb:
+  image: klaemo/couchdb:latest
+  ports:
+   - "5984:5984"
+
+photoalbum:
+  build: .
+  links:
+   - couchdb
+  ports:
+   - "8080:8080"
